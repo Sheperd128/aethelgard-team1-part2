@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aethelgard Industries | Global Intranet</title>
+    <style>
+        :root {
+            --bg-main: #020817;
+            --bg-card: #0f172a;
+            --bg-nav: #1e293b;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg-main); color: var(--text-main); line-height: 1.6; }
+        
+        /* Navigation */
+        nav { background-color: var(--bg-nav); padding: 1rem; display: flex; justify-content: center; gap: 2rem; border-bottom: 2px solid var(--accent); box-shadow: 0 4px 6px rgba(0,0,0,0.3); flex-wrap: wrap; }
+        .nav-btn { background: none; border: none; color: var(--text-main); font-size: 1.1rem; cursor: pointer; padding: 0.5rem 1rem; border-radius: 4px; transition: background 0.3s; font-weight: bold; }
+        .nav-btn:hover, .nav-btn.active { background: var(--accent); color: white; }
+        
+        .container { max-width: 1100px; margin: 2rem auto; padding: 0 1rem; }
+        .page-section { display: none; animation: fadeIn 0.5s; }
+        .page-section.active { display: block; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* General Layouts */
+        .hero { text-align: center; padding: 3rem 1rem; background: var(--bg-card); border-radius: 8px; margin-bottom: 2rem; border: 1px solid #1e293b; }
+        .hero h2 { color: var(--accent); font-size: 2.2rem; margin-bottom: 1rem; }
+        
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
+        .card { background: var(--bg-card); padding: 1.5rem; border-radius: 8px; border-top: 3px solid var(--accent); box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .card h3 { color: var(--accent); margin-bottom: 0.5rem; }
+        
+        /* Suspect Profiles */
+        .profile { text-align: center; }
+        .profile-img { width: 100px; height: 100px; background: #1e293b; border-radius: 50%; margin: 0 auto 1rem; border: 2px solid var(--accent); display: flex; justify-content: center; align-items: center; font-size: 2rem; font-weight: bold; color: var(--bg-main); }
+        .profile-quote { font-style: italic; color: var(--text-muted); font-size: 0.9rem; margin-top: 1rem; border-top: 1px solid #1e293b; padding-top: 0.5rem; }
+        
+        .secret-lock { cursor: pointer; color: #1e293b; transition: color 0.3s; font-size: 0.8rem; margin-left: 5px; }
+        .secret-lock:hover { color: #ef4444; }
+
+        /* Modals */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(2, 8, 23, 0.95); justify-content: center; align-items: center; z-index: 1000; padding: 1rem; backdrop-filter: blur(5px); }
+        .modal-content { background: var(--bg-card); padding: 2rem; border-radius: 8px; text-align: center; border: 1px solid var(--accent); width: 100%; max-width: 500px; }
+        
+        .pin-display { font-size: 2rem; letter-spacing: 10px; margin-bottom: 1rem; color: white; background: #020817; padding: 1rem; border-radius: 4px; border: 1px solid #1e293b; min-height: 70px; }
+        .numpad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-width: 250px; margin: 0 auto 1.5rem; }
+        .numpad button { padding: 1rem; font-size: 1.2rem; background: var(--bg-nav); color: white; border: 1px solid var(--accent); border-radius: 4px; cursor: pointer; transition: 0.2s; }
+        .numpad button:hover { background: var(--accent); }
+        .numpad button.clear { background: #ef4444; border-color: #ef4444; }
+        
+        .email-body { text-align: left; background: #020817; padding: 1.5rem; border-radius: 4px; border-left: 4px solid #ef4444; font-size: 0.95rem; margin-bottom: 1.5rem; }
+        .terminal-input { width: 100%; padding: 0.8rem; background: black; color: #10b981; border: 1px solid #10b981; font-family: monospace; font-size: 1rem; margin-bottom: 1rem; text-transform: uppercase; }
+        .terminal-btn { width: 100%; padding: 0.8rem; background: #10b981; color: black; font-weight: bold; border: none; cursor: pointer; border-radius: 2px; }
+        .terminal-btn:hover { background: #059669; color: white; }
+        .error-msg { color: #ef4444; font-weight: bold; margin-top: 1rem; display: none; }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <button class="nav-btn active" onclick="showPage('home')">Home</button>
+        <button class="nav-btn" onclick="showPage('about')">About Us</button>
+        <button class="nav-btn" onclick="showPage('team')">Meet the Team</button>
+        <button class="nav-btn" onclick="showPage('products')">Products</button>
+    </nav>
+
+    <div class="container">
+        
+        <!-- HOME PAGE -->
+        <section id="home" class="page-section active">
+            <div class="hero">
+                <h2>Welcome to the Intranet</h2>
+                <p>Confidential portal for Aethelgard Industries employees and executive staff.</p>
+            </div>
+            <div class="grid">
+                <div class="card">
+                    <h3>CEO's Message</h3>
+                    <p>“We are not here to participate in the market. We are here to dominate it. Trust no one outside these walls.” <br><br>- <em>Richard Aethelgard</em></p>
+                </div>
+                <div class="card">
+                    <h3>Q4 Financial Audit</h3>
+                    <p>Status: <span style="color:#ef4444;">PENDING</span></p>
+                    <p style="font-size: 0.9rem; margin-top: 0.5rem; color: var(--text-muted);">External auditors arrive Monday. All department heads must finalize their offshore ledgers.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ABOUT PAGE -->
+        <section id="about" class="page-section">
+            <div class="hero">
+                <h2>Our History</h2>
+                <p>The foundation of an empire.</p>
+            </div>
+            <div class="card" style="max-width: 800px; margin: 0 auto;">
+                <h3>Humble Beginnings</h3>
+                <p>Founded in 1998 by Richard Aethelgard, this conglomerate did not start in a skyscraper. It started on the water. Before he had the capital to buy his first office building, Richard operated entirely out of a converted boathouse.</p>
+                <br>
+                <p>His first major international logistics deals, which cemented our aggressive negotiation tactics, were drafted and signed aboard his personal yacht, <strong>The Albatross</strong>. That relentless drive and willingness to conduct business in the shadows remains our guiding principle today.</p>
+            </div>
+        </section>
+
+        <!-- TEAM PAGE -->
+        <section id="team" class="page-section">
+            <div class="hero">
+                <h2>Executive Boardroom</h2>
+                <p>The architects of our success.</p>
+            </div>
+            <div class="grid">
+                <!-- Aizen -->
+                <div class="card profile">
+                    <div class="profile-img">SA</div>
+                    <h3>Sosuke Aizen <span class="secret-lock" onclick="openPinModal()">🔒</span></h3>
+                    <p style="color: var(--accent); font-weight: bold;">Chief Strategy Officer</p>
+                    <p class="profile-quote">"I don't play the game. I move the pieces."</p>
+                </div>
+                <!-- Light -->
+                <div class="card profile">
+                    <div class="profile-img">LY</div>
+                    <h3>Light Yagami</h3>
+                    <p style="color: var(--accent); font-weight: bold;">Head of Legal Counsel</p>
+                    <p class="profile-quote">"The law is flawless. It is only the people who are corrupt."</p>
+                </div>
+                <!-- Makima -->
+                <div class="card profile">
+                    <div class="profile-img">M</div>
+                    <h3>Makima</h3>
+                    <p style="color: var(--accent); font-weight: bold;">Director of HR</p>
+                    <p class="profile-quote">"A loyal employee is a quiet employee. I ensure both."</p>
+                </div>
+                <!-- Gojo -->
+                <div class="card profile">
+                    <div class="profile-img">SG</div>
+                    <h3>Satoru Gojo</h3>
+                    <p style="color: var(--accent); font-weight: bold;">Lead Angel Investor</p>
+                    <p class="profile-quote">"I own 49% of this building. Act accordingly."</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- PRODUCTS PAGE (The Clue) -->
+        <section id="products" class="page-section">
+            <div class="hero">
+                <h2>Enterprise Solutions</h2>
+                <p>Industry-leading software packages.</p>
+            </div>
+            <div class="grid">
+                <div class="card">
+                    <h3>Aegis Security Protocol</h3>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">Military-grade encryption for offshore accounts.</p>
+                    <p style="margin-top: 1rem; font-family: monospace; color: var(--accent);">SKU: AEGIS-<strong>8</strong></p>
+                </div>
+                <div class="card">
+                    <h3>Omni-Ledger Analytics</h3>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">Predictive financial modeling and tax routing.</p>
+                    <p style="margin-top: 1rem; font-family: monospace; color: var(--accent);">SKU: OMNI-<strong>1</strong></p>
+                </div>
+                <div class="card">
+                    <h3>Phantom Cloud Storage</h3>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">Untraceable digital archiving for sensitive data.</p>
+                    <p style="margin-top: 1rem; font-family: monospace; color: var(--accent);">SKU: PHANTOM-<strong>4</strong></p>
+                </div>
+                <div class="card">
+                    <h3>Eternity Legal Framework</h3>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">Automated loophole generation for contract law.</p>
+                    <p style="margin-top: 1rem; font-family: monospace; color: var(--accent);">SKU: ETERNITY-<strong>9</strong></p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- PIN Modal for Aizen's Email -->
+    <div id="pin-modal" class="modal">
+        <div class="modal-content">
+            <h3 style="color: #ef4444; margin-bottom: 1rem;">RESTRICTED WEBMAIL ACCESS</h3>
+            <div id="pin-display" class="pin-display"></div>
+            <div class="numpad">
+                <button onclick="addPin('1')">1</button>
+                <button onclick="addPin('2')">2</button>
+                <button onclick="addPin('3')">3</button>
+                <button onclick="addPin('4')">4</button>
+                <button onclick="addPin('5')">5</button>
+                <button onclick="addPin('6')">6</button>
+                <button onclick="addPin('7')">7</button>
+                <button onclick="addPin('8')">8</button>
+                <button onclick="addPin('9')">9</button>
+                <button class="clear" onclick="closePinModal()">X</button>
+                <button onclick="addPin('0')">0</button>
+                <button class="clear" onclick="clearPin()">C</button>
+            </div>
+            <p id="pin-error" class="error-msg">INCORRECT PIN</p>
+        </div>
+    </div>
+
+    <!-- Webmail Password Modal (The Escape) -->
+    <div id="webmail-modal" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <h3 style="color: var(--accent); margin-bottom: 1rem;">SECURE INBOX: S. AIZEN</h3>
+            
+            <div class="email-body">
+                <p><strong>To:</strong> Light Yagami</p>
+                <p><strong>From:</strong> Sosuke Aizen</p>
+                <p><strong>Subject:</strong> The Cleanup</p>
+                <hr style="border-color: #1e293b; margin: 10px 0;">
+                <p>Light,<br><br>Richard is getting paranoid. He knows about the audit and he's moved the blackmail files to the offshore server to use as leverage against us.</p>
+                <p>We need to wipe them before he executes his plan tonight. To access the secure terminal, you need the master passcode.</p>
+                <p style="color: #ef4444; font-weight: bold; margin-top: 10px;">The passcode is the name of the vessel where he started this whole rotten empire.</p>
+                <p>Don't fail me.</p>
+            </div>
+
+            <p style="font-size: 0.85rem; color: #10b981; margin-bottom: 0.5rem; text-align: left;">CONNECTING TO OFFSHORE SERVER...</p>
+            <input type="text" id="server-pass" class="terminal-input" placeholder="ENTER VESSEL NAME" autocomplete="off">
+            <button class="terminal-btn" onclick="checkFinalPass()">BYPASS FIREWALL</button>
+            <button style="margin-top: 10px; background: transparent; border: 1px solid #475569; color: #94a3b8;" class="terminal-btn" onclick="document.getElementById('webmail-modal').style.display='none'">CLOSE CONNECTION</button>
+            
+            <p id="server-error" class="error-msg">ACCESS DENIED. UNKNOWN ENTITY.</p>
+        </div>
+    </div>
+
+    <script>
+        // Page Navigation
+        function showPage(pageId) {
+            document.querySelectorAll('.page-section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(pageId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        // PIN Pad Logic
+        let currentPin = '';
+        
+        function openPinModal() {
+            document.getElementById('pin-modal').style.display = 'flex';
+            clearPin();
+        }
+
+        function closePinModal() {
+            document.getElementById('pin-modal').style.display = 'none';
+        }
+
+        function clearPin() {
+            currentPin = '';
+            document.getElementById('pin-display').innerText = '';
+            document.getElementById('pin-error').style.display = 'none';
+        }
+
+        function addPin(num) {
+            if (currentPin.length < 4) {
+                currentPin += num;
+                document.getElementById('pin-display').innerText = '* '.repeat(currentPin.length);
+                
+                if (currentPin.length === 4) {
+                    setTimeout(checkPin, 300);
+                }
+            }
+        }
+
+        function checkPin() {
+            // The PIN is 8149 (From the Product SKUs)
+            if (currentPin === '8149') {
+                document.getElementById('pin-modal').style.display = 'none';
+                document.getElementById('webmail-modal').style.display = 'flex';
+                document.getElementById('server-pass').focus();
+            } else {
+                document.getElementById('pin-error').style.display = 'block';
+                setTimeout(clearPin, 1000);
+            }
+        }
+
+        // Final Password Logic
+        function checkFinalPass() {
+            const input = document.getElementById('server-pass').value.toUpperCase().trim();
+            const error = document.getElementById('server-error');
+            
+            // Password is ALBATROSS (From the About page)
+            if(input === "ALBATROSS") {
+                // REDIRECT TO WEBSITE 3
+                window.location.href = "https://aethelgard-team1-part3.vercel.app/"; 
+            } else {
+                error.style.display = 'block';
+                setTimeout(() => error.style.display = 'none', 2000);
+            }
+        }
+        
+        document.getElementById("server-pass").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                checkFinalPass();
+            }
+        });
+    </script>
+</body>
+</html>
