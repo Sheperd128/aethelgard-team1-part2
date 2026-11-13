@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aethelgard Intranet | Products</title>
+    <style>
+        :root {
+            --bg-main: #f8fafc;
+            --bg-card: #ffffff;
+            --bg-nav: #e2e8f0;
+            --accent: #0284c7;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --border: #cbd5e1;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg-main); color: var(--text-main); line-height: 1.6; }
+        
+        nav { background-color: var(--bg-card); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid var(--accent); box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .logo { font-size: 1.5rem; font-weight: 800; color: var(--text-main); letter-spacing: 1px; }
+        .logo span { color: var(--accent); }
+        .nav-links { display: flex; gap: 1.5rem; }
+        .nav-links a { text-decoration: none; color: var(--text-muted); font-weight: 600; padding: 0.5rem 1rem; border-radius: 4px; transition: 0.3s; }
+        .nav-links a:hover, .nav-links a.active { background: var(--bg-nav); color: var(--accent); }
+        .secure-link { color: #ef4444 !important; font-weight: bold; border: 1px solid #ef4444; }
+
+        .container { max-width: 1200px; margin: 3rem auto; padding: 0 1rem; }
+        
+        .header-title { text-align: center; margin-bottom: 3rem; }
+        .header-title h2 { font-size: 2.2rem; color: var(--text-main); }
+        .header-title p { color: var(--text-muted); }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
+        
+        .card { background: var(--bg-card); padding: 2rem; border-radius: 8px; border: 1px solid var(--border); box-shadow: 0 4px 6px rgba(0,0,0,0.02); transition: transform 0.3s; position: relative; overflow: hidden; }
+        .card:hover { transform: translateY(-5px); border-color: var(--accent); }
+        .card h3 { color: var(--text-main); margin-bottom: 0.5rem; font-size: 1.3rem; }
+        .card p { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem; min-height: 60px; }
+        
+        .sku-table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.9rem; }
+        .sku-table th, .sku-table td { padding: 0.5rem; text-align: left; border-bottom: 1px solid var(--border); }
+        .sku-table th { color: var(--accent); font-weight: 600; }
+        .sku-table td { font-family: monospace; color: var(--text-muted); }
+        
+        /* Just plain text for the puzzle */
+        .version-tag { position: absolute; top: 10px; right: 10px; background: var(--bg-nav); color: var(--text-muted); font-size: 0.75rem; padding: 3px 8px; border-radius: 4px; font-family: monospace; }
+
+        footer { text-align: center; padding: 2rem; color: var(--text-muted); font-size: 0.85rem; border-top: 1px solid var(--border); margin-top: 4rem; }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo">Aethelgard<span>Intranet</span></div>
+        <div class="nav-links">
+            <a href="index.html">Directory & Lore</a>
+            <a href="products.html" class="active">Enterprise SKUs</a>
+            <a href="webmail.html" class="secure-link">Secure Webmail 🔒</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="header-title">
+            <h2>Enterprise Software Solutions</h2>
+            <p>Proprietary systems deployed across all Aethelgard offshore holdings.</p>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <div class="version-tag">v.5.9.1.4</div>
+                <h3>Aegis Protocol</h3>
+                <p>Military-grade encryption designed specifically for high-frequency offshore accounts. Ensures zero-knowledge packet transfers.</p>
+                <table class="sku-table">
+                    <tr><th>License</th><td>Enterprise</td></tr>
+                    <tr><th>Region</th><td>Global</td></tr>
+                    <tr><th>SKU</th><td>AEG-7734-X</td></tr>
+                </table>
+            </div>
+
+            <div class="card">
+                <div class="version-tag">v.8.2.0.6</div>
+                <h3>Omni-Ledger</h3>
+                <p>Predictive financial modeling and tax routing. Automatically detects and reallocates capital to avoid audit flags.</p>
+                <table class="sku-table">
+                    <tr><th>License</th><td>Executive</td></tr>
+                    <tr><th>Region</th><td>NA/EU</td></tr>
+                    <tr><th>SKU</th><td>OMN-9921-Y</td></tr>
+                </table>
+            </div>
+
+            <div class="card">
+                <div class="version-tag">v.1.4.7.9</div>
+                <h3>Phantom Cloud</h3>
+                <p>Untraceable digital archiving for sensitive communications. Features automated localized purging upon unauthorized access.</p>
+                <table class="sku-table">
+                    <tr><th>License</th><td>Restricted</td></tr>
+                    <tr><th>Region</th><td>Offshore</td></tr>
+                    <tr><th>SKU</th><td>PHN-4410-Z</td></tr>
+                </table>
+            </div>
+
+            <div class="card">
+                <div class="version-tag">v.6.0.8.3</div>
+                <h3>Eternity Framework</h3>
+                <p>Automated loophole generation for contract law. Continuously cross-references international trade agreements.</p>
+                <table class="sku-table">
+                    <tr><th>License</th><td>Legal Div</td></tr>
+                    <tr><th>Region</th><td>Global</td></tr>
+                    <tr><th>SKU</th><td>ETR-8850-L</td></tr>
+                </table>
+            </div>
+            
+            <div class="card">
+                <div class="version-tag">v.4.1.2.0</div>
+                <h3>Apex Sentinel</h3>
+                <p>Physical grid integration. Monitors biometric locks, auxiliary power, and emergency lockdown overrides across estates.</p>
+                <table class="sku-table">
+                    <tr><th>License</th><td>Security</td></tr>
+                    <tr><th>Region</th><td>Alpine</td></tr>
+                    <tr><th>SKU</th><td>APX-1120-S</td></tr>
+                </table>
+            </div>
+            
+            <div class="card">
+                <div class="version-tag">v.2.8.5.1</div>
+                <h3>Prism Analytics</h3>
+                <p>Real-time employee behavioral tracking. Aggregates internal comms to flag potential whistleblowers before they act.</p>
+                <table class="sku-table">
+                    <tr><th>License</th><td>HR Div</td></tr>
+                    <tr><th>Region</th><td>HQ</td></tr>
+                    <tr><th>SKU</th><td>PRM-3390-H</td></tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Aethelgard Industries © 2026. All rights reserved.</p>
+    </footer>
+</body>
+</html>

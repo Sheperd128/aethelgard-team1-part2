@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aethelgard Intranet | Secure Webmail</title>
+    <style>
+        :root {
+            --bg-main: #f8fafc;
+            --bg-card: #ffffff;
+            --bg-nav: #e2e8f0;
+            --accent: #0284c7;
+            --accent-hover: #0369a1;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --border: #cbd5e1;
+            --error: #ef4444;
+            --warning: #f59e0b;
+        }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg-main); color: var(--text-main); line-height: 1.6; }
+        
+        nav { background-color: var(--bg-card); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid var(--accent); box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .logo { font-size: 1.5rem; font-weight: 800; color: var(--text-main); letter-spacing: 1px; }
+        .logo span { color: var(--accent); }
+        .nav-links { display: flex; gap: 1.5rem; }
+        .nav-links a { text-decoration: none; color: var(--text-muted); font-weight: 600; padding: 0.5rem 1rem; border-radius: 4px; transition: 0.3s; }
+        .nav-links a:hover, .nav-links a.active { background: var(--bg-nav); color: var(--accent); }
+        .secure-link { color: var(--error) !important; font-weight: bold; border: 1px solid var(--error); }
+        .secure-link:hover { background: var(--error) !important; color: white !important; }
+
+        .container { max-width: 850px; margin: 3rem auto; padding: 0 1rem; }
+
+        .email-header { border-bottom: 1px solid var(--border); padding-bottom: 1rem; margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: flex-end; }
+        .email-header h2 { color: var(--accent); font-size: 2rem; }
+        .email-header span { color: var(--text-muted); font-family: monospace; font-weight: bold; }
+        
+        .email-card { background: var(--bg-card); border: 1px solid var(--border); padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem; border-left: 4px solid var(--accent); box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .email-card.locked { border-left-color: var(--error); cursor: pointer; transition: transform 0.3s, box-shadow 0.3s; }
+        .email-card.locked.secret { border-left-color: var(--warning); }
+        .email-card.locked:hover { transform: translateY(-3px); box-shadow: 0 8px 15px rgba(0,0,0,0.05); }
+        
+        .meta { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem; border-bottom: 1px dashed var(--border); padding-bottom: 0.5rem; display: grid; grid-template-columns: 80px 1fr; gap: 5px; }
+        .meta strong { color: var(--text-main); }
+        
+        .email-body { line-height: 1.7; font-size: 0.95rem; color: var(--text-main); text-align: justify; }
+
+        .server-connect-box { margin-top: 3rem; text-align: center; padding: 2rem; background: var(--bg-nav); border-radius: 8px; border: 1px dashed var(--border); }
+        .server-connect-box h3 { color: var(--text-main); margin-bottom: 1rem; font-family: monospace; letter-spacing: 2px; }
+        .connect-btn { background: var(--text-main); color: #fff; border: none; padding: 1rem 2rem; font-family: monospace; font-size: 1.1rem; font-weight: bold; cursor: pointer; border-radius: 4px; letter-spacing: 1px; transition: background 0.3s; }
+        .connect-btn:hover { background: var(--accent); }
+
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.9); justify-content: center; align-items: center; z-index: 1000; padding: 1rem; }
+        .modal-content { background: var(--bg-card); padding: 2.5rem; border-radius: 8px; border: 1px solid var(--border); text-align: center; width: 100%; max-width: 450px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        .modal-content h3 { color: var(--accent); margin-bottom: 1.5rem; }
+        
+        .numpad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 1.5rem; }
+        .numpad button { padding: 1rem; font-size: 1.2rem; background: var(--bg-main); color: var(--text-main); border: 1px solid var(--border); border-radius: 4px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .numpad button:hover { background: var(--bg-nav); border-color: var(--accent); }
+        #pin-display { font-size: 2.5rem; letter-spacing: 15px; margin-bottom: 1rem; color: var(--text-main); min-height: 50px; font-family: monospace; background: var(--bg-main); border-radius: 4px; border: 1px solid var(--border); }
+
+        .input-field { width: 100%; padding: 1rem; background: var(--bg-main); border: 1px solid var(--border); color: var(--text-main); text-align: center; font-size: 1.1rem; letter-spacing: 3px; border-radius: 4px; margin-bottom: 1rem; text-transform: uppercase; outline: none; font-family: monospace; }
+        .input-field:focus { border-color: var(--accent); }
+        .modal-btn { width: 100%; padding: 1rem; background: var(--accent); color: white; font-weight: bold; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; border-radius: 4px; transition: 0.3s; margin-bottom: 0.5rem; }
+        .modal-btn:hover { background: var(--accent-hover); }
+        .close-btn { background: transparent; color: var(--text-muted); border: 1px solid var(--border); }
+        .close-btn:hover { background: var(--bg-nav); color: var(--text-main); }
+        
+        .error { color: var(--error); margin-top: 1rem; font-weight: bold; display: none; font-family: monospace; }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">Aethelgard<span>Intranet</span></div>
+        <div class="nav-links">
+            <a href="index.html">Directory & Lore</a>
+            <a href="products.html">Enterprise SKUs</a>
+            <a href="webmail.html" class="active secure-link">Secure Webmail 🔒</a>
+        </div>
+    </nav>
+
+    <!-- The Inbox (No initial login required) -->
+    <div id="inbox-screen" class="container">
+        <div class="email-header">
+            <h2>INBOX: S. AIZEN</h2>
+            <span>CONNECTION: PROXY SERVER</span>
+        </div>
+
+        <!-- Plaintext Email -->
+        <div class="email-card">
+            <div class="meta">
+                <strong>FROM:</strong> K. Nanami (Compliance)
+                <strong>TO:</strong> S. Aizen (Strategy)
+                <strong>TIME:</strong> 17:01 EST
+            </div>
+            <div class="email-body">
+                Aizen,<br><br>
+                The requests you forwarded from Tengen, Gojo, and Makima were highly irregular and entirely contradictory to safety protocols. <br><br>
+                As requested, I approved all of them. The ink is dry. I am clocking out. Whatever happens to the estate tonight, my department is legally indemnified.
+            </div>
+        </div>
+
+        <!-- Locked Draft (Requires PIN: 5273) -->
+        <div class="email-card locked" id="draft-card" onclick="openPinModal()">
+            <div class="meta" style="border-color: var(--error);">
+                <strong style="color: var(--error);">ENCRYPTED DRAFT (UNSENT)</strong> <span></span>
+                <strong>REQUIRED:</strong> 4-DIGIT ENTERPRISE SKU PIN
+            </div>
+            <div class="email-body" style="color: var(--error); font-weight: bold; text-align: center; padding: 1rem 0;">
+                [ CLICK TO DECRYPT FOLDER ]
+            </div>
+        </div>
+
+        <!-- Unlocked Draft Content (Hidden initially) -->
+        <div class="email-card" id="draft-content" style="display: none;">
+            <div class="meta">
+                <strong>TO:</strong> Light Yagami (Legal)
+                <strong>SUBJECT:</strong> The Cleanup
+                <strong>STATUS:</strong> DRAFT
+            </div>
+            <div class="email-body">
+                Light,<br><br>
+                Richard is getting paranoid. He knows about the internal audit and he's moved the blackmail files to the offshore server to use as leverage against us.<br><br>
+                We need to wipe them before he executes his plan tonight. I am setting up the master override passcode for the server now. To access the terminal, you will need the passcode.<br><br>
+                <strong style="color: var(--error);">The passcode is the one thing the executive board refuses to believe in.</strong>
+            </div>
+        </div>
+
+        <!-- Locked Lore Drop (Requires ECLIPSE) - Completely Optional -->
+        <div class="email-card locked secret" id="lore-card" onclick="openKeywordModal()">
+            <div class="meta" style="border-color: var(--warning);">
+                <strong style="color: var(--warning);">DEAD-HAND SWITCH: R. AETHELGARD</strong> <span></span>
+                <strong>REQUIRED:</strong> CLASSIFIED AUDIT KEYWORD
+            </div>
+            <div class="email-body" style="color: var(--warning); font-weight: bold; text-align: center; padding: 1rem 0;">
+                [ CLICK TO DECRYPT SECRET MESSAGE ]
+            </div>
+        </div>
+
+        <!-- Unlocked Lore Drop Content (Hidden initially) -->
+        <div class="email-card" id="lore-drop-content" style="display: none; border-color: var(--warning); background: #fffbeb;">
+            <div class="meta">
+                <strong>FROM:</strong> R. Aethelgard (CEO)
+                <strong>SUBJECT:</strong> AUTOMATED DEAD-HAND PROTOCOL
+            </div>
+            <div class="email-body">
+                If you are reading this, the Alpine Estate has fallen. <br><br>
+                I built this empire from the ground up, but it will sink because I trusted the wrong people. Aizen was my only true rival. He was the one holding the knife. <br><br>
+                He had an accomplice, though. Someone out there helped him, but who? They are erasing the logs to make it look like a tragic accident. Do not trust the timeline. They manufactured a catastrophic coincidence. <br><br>
+                Find the offshore server. Expose them. 
+            </div>
+        </div>
+
+        <!-- Offshore Server Connect (Needs COINCIDENCE) -->
+        <div class="server-connect-box">
+            <h3>OFFSHORE SERVER OVERRIDE</h3>
+            <button class="connect-btn" onclick="openServerModal()">INITIATE CONNECTION</button>
+        </div>
+    </div>
+
+    <!-- 1. PIN Modal (5273) -->
+    <div id="pin-modal" class="modal">
+        <div class="modal-content">
+            <h3 style="color: var(--error);">DECRYPT DRAFT</h3>
+            <div id="pin-display"></div>
+            <div class="numpad">
+                <button onclick="addPin('1')">1</button>
+                <button onclick="addPin('2')">2</button>
+                <button onclick="addPin('3')">3</button>
+                <button onclick="addPin('4')">4</button>
+                <button onclick="addPin('5')">5</button>
+                <button onclick="addPin('6')">6</button>
+                <button onclick="addPin('7')">7</button>
+                <button onclick="addPin('8')">8</button>
+                <button onclick="addPin('9')">9</button>
+                <button onclick="closeModals()" style="color: var(--error);">X</button>
+                <button onclick="addPin('0')">0</button>
+                <button onclick="clearPin()" style="color: #eab308;">C</button>
+            </div>
+            <p id="pin-error" class="error">INCORRECT PIN</p>
+        </div>
+    </div>
+
+    <!-- 2. Keyword Modal (ECLIPSE) -->
+    <div id="keyword-modal" class="modal">
+        <div class="modal-content">
+            <h3 style="color: var(--warning);">DECRYPT SECRET MESSAGE</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">Enter the keyword recovered from the secret audit memo.</p>
+            <input type="text" id="keyword-input" class="input-field" placeholder="ENTER KEYWORD" autocomplete="off">
+            <button class="modal-btn" style="background: var(--warning); color: #000;" onclick="checkKeyword()">DECRYPT</button>
+            <button class="modal-btn close-btn" onclick="closeModals()">CANCEL</button>
+            <p id="keyword-error" class="error">INVALID KEYWORD.</p>
+        </div>
+    </div>
+
+    <!-- 3. Final Server Modal (COINCIDENCE) -->
+    <div id="server-modal" class="modal">
+        <div class="modal-content">
+            <h3>REMOTE SERVER ACCESS</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">Enter the master passcode to override the offshore servers.</p>
+            <input type="text" id="server-input" class="input-field" placeholder="ENTER PASSCODE" autocomplete="off">
+            <button class="modal-btn" onclick="checkServerPass()">BYPASS FIREWALL</button>
+            <button class="modal-btn close-btn" onclick="closeModals()">CANCEL</button>
+            <p id="server-error" class="error">ACCESS DENIED. UNKNOWN ENTITY.</p>
+        </div>
+    </div>
+
+    <script>
+        // Universal Close
+        function closeModals() {
+            document.getElementById('pin-modal').style.display = 'none';
+            document.getElementById('keyword-modal').style.display = 'none';
+            document.getElementById('server-modal').style.display = 'none';
+        }
+
+        // --- PIN Logic (5273) ---
+        let currentPin = '';
+        function openPinModal() {
+            document.getElementById('pin-modal').style.display = 'flex';
+            clearPin();
+        }
+        function clearPin() {
+            currentPin = '';
+            document.getElementById('pin-display').innerText = '';
+            document.getElementById('pin-error').style.display = 'none';
+        }
+        function addPin(num) {
+            if (currentPin.length < 4) {
+                currentPin += num;
+                document.getElementById('pin-display').innerText = '* '.repeat(currentPin.length);
+                if (currentPin.length === 4) setTimeout(checkPin, 300);
+            }
+        }
+        function checkPin() {
+            if (currentPin === '5273') {
+                closeModals();
+                document.getElementById('draft-card').style.display = 'none';
+                document.getElementById('draft-content').style.display = 'block';
+            } else {
+                document.getElementById('pin-error').style.display = 'block';
+                setTimeout(clearPin, 1000);
+            }
+        }
+
+        // --- Keyword Logic (ECLIPSE) ---
+        function openKeywordModal() {
+            document.getElementById('keyword-modal').style.display = 'flex';
+            document.getElementById('keyword-input').value = '';
+            document.getElementById('keyword-error').style.display = 'none';
+        }
+        function checkKeyword() {
+            const input = document.getElementById('keyword-input').value.toUpperCase().trim();
+            if (input === 'ECLIPSE') {
+                closeModals();
+                document.getElementById('lore-card').style.display = 'none';
+                document.getElementById('lore-drop-content').style.display = 'block';
+            } else {
+                document.getElementById('keyword-error').style.display = 'block';
+            }
+        }
+
+        // --- Final Server Logic (COINCIDENCE) ---
+        function openServerModal() {
+            document.getElementById('server-modal').style.display = 'flex';
+            document.getElementById('server-input').value = '';
+            document.getElementById('server-error').style.display = 'none';
+        }
+        function checkServerPass() {
+            const input = document.getElementById('server-input').value.toUpperCase().trim();
+            if (input === 'COINCIDENCE') {
+                // REDIRECT TO WEBSITE 3
+                window.location.href = "https://aethelgard-team1-part3.vercel.app/"; 
+            } else {
+                document.getElementById('server-error').style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
